@@ -15,19 +15,15 @@ from trainer import Trainer
 from rmsprop_applier import RMSPropApplier
 from constants import *
 
-def log_uniform(lo, hi, rate):
-  log_lo = math.log(lo)
-  log_hi = math.log(hi)
-  v = log_lo * (1-rate) + log_hi * rate
-  return math.exp(v)
+def log_uniform(lo, hi):
+  return np.logspace(math.log(lo), math.loh(hi), PARALLEL_SIZE)
 
 device = "/cpu:0"
 if USE_GPU:
   device = "/gpu:0"
 
-initial_learning_rate = log_uniform(INITIAL_ALPHA_LOW,
-                                    INITIAL_ALPHA_HIGH,
-                                    INITIAL_ALPHA_LOG_RATE)
+initial_learning_rates = log_uniform(INITIAL_ALPHA_LOW,
+                                    INITIAL_ALPHA_HIGH)
 
 global_t = 0
 
@@ -50,7 +46,7 @@ grad_applier = RMSPropApplier(learning_rate = learning_rate_input,
 for i in range(PARALLEL_SIZE):
   trainer = Trainer(i,
                     global_network,
-                    initial_learning_rate,
+                    initial_learning_rate[i],
                     learning_rate_input,
                     grad_applier,
                     MAX_TIME_STEP,
