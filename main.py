@@ -16,7 +16,7 @@ from rmsprop_applier import RMSPropApplier
 from constants import *
 
 def log_uniform(lo, hi):
-  return np.logspace(math.log(lo), math.loh(hi), PARALLEL_SIZE)
+  return np.logspace(math.log(lo), math.log(hi), PARALLEL_SIZE)
 
 device = "/cpu:0"
 if USE_GPU:
